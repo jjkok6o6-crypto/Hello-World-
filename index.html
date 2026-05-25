@@ -10,119 +10,122 @@
     <div class="container">
         <header>
             <h1>💱 Live Currency Exchange</h1>
-            <p class="subtitle">Real-time exchange rates powered by Open Exchange Rates API</p>
+            <p class="subtitle">Real-time exchange rates powered by ExchangeRate-API</p>
         </header>
 
-        <div class="exchange-box">
-            <!-- Currency Input Section -->
-            <div class="input-section">
-                <div class="input-group">
-                    <label for="amount">Amount:</label>
-                    <input 
-                        type="number" 
-                        id="amount" 
-                        placeholder="Enter amount" 
-                        value="1" 
-                        min="0" 
-                        step="0.01"
-                    >
-                </div>
-
-                <div class="currency-group">
-                    <div class="currency-select">
-                        <label for="fromCurrency">From:</label>
-                        <select id="fromCurrency">
-                            <option value="USD">USD - US Dollar</option>
-                            <option value="EUR">EUR - Euro</option>
-                            <option value="GBP">GBP - British Pound</option>
-                            <option value="JPY">JPY - Japanese Yen</option>
-                            <option value="AUD">AUD - Australian Dollar</option>
-                            <option value="CAD">CAD - Canadian Dollar</option>
-                            <option value="CHF">CHF - Swiss Franc</option>
-                            <option value="CNY">CNY - Chinese Yuan</option>
-                            <option value="INR">INR - Indian Rupee</option>
-                            <option value="MXN">MXN - Mexican Peso</option>
-                        </select>
+        <div class="main-box">
+            <!-- Left Section: Currency Converter -->
+            <div class="converter-section">
+                <!-- Currency Input Section -->
+                <div class="input-section">
+                    <div class="input-group">
+                        <label for="amount">Amount:</label>
+                        <input 
+                            type="number" 
+                            id="amount" 
+                            placeholder="Enter amount" 
+                            value="1" 
+                            min="0" 
+                            step="0.01"
+                        >
                     </div>
 
-                    <button id="swapBtn" class="swap-btn" title="Swap currencies">⇄</button>
+                    <div class="currency-group">
+                        <div class="currency-select">
+                            <label for="fromCurrency">From:</label>
+                            <select id="fromCurrency">
+                                <option value="USD">USD - US Dollar</option>
+                                <option value="EUR">EUR - Euro</option>
+                                <option value="GBP">GBP - British Pound</option>
+                                <option value="JPY">JPY - Japanese Yen</option>
+                                <option value="AUD">AUD - Australian Dollar</option>
+                                <option value="CAD">CAD - Canadian Dollar</option>
+                                <option value="CHF">CHF - Swiss Franc</option>
+                                <option value="CNY">CNY - Chinese Yuan</option>
+                                <option value="INR">INR - Indian Rupee</option>
+                                <option value="MXN">MXN - Mexican Peso</option>
+                            </select>
+                        </div>
 
-                    <div class="currency-select">
-                        <label for="toCurrency">To:</label>
-                        <select id="toCurrency">
-                            <option value="USD">USD - US Dollar</option>
-                            <option value="EUR">EUR - Euro</option>
-                            <option value="GBP">GBP - British Pound</option>
-                            <option value="JPY">JPY - Japanese Yen</option>
-                            <option value="AUD">AUD - Australian Dollar</option>
-                            <option value="CAD">CAD - Canadian Dollar</option>
-                            <option value="CHF">CHF - Swiss Franc</option>
-                            <option value="CNY">CNY - Chinese Yuan</option>
-                            <option value="INR">INR - Indian Rupee</option>
-                            <option value="MXN">MXN - Mexican Peso</option>
-                        </select>
+                        <button id="swapBtn" class="swap-btn" title="Swap currencies">⇄</button>
+
+                        <div class="currency-select">
+                            <label for="toCurrency">To:</label>
+                            <select id="toCurrency">
+                                <option value="USD">USD - US Dollar</option>
+                                <option value="EUR">EUR - Euro</option>
+                                <option value="GBP">GBP - British Pound</option>
+                                <option value="JPY">JPY - Japanese Yen</option>
+                                <option value="AUD">AUD - Australian Dollar</option>
+                                <option value="CAD">CAD - Canadian Dollar</option>
+                                <option value="CHF">CHF - Swiss Franc</option>
+                                <option value="CNY">CNY - Chinese Yuan</option>
+                                <option value="INR">INR - Indian Rupee</option>
+                                <option value="MXN">MXN - Mexican Peso</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Result Section -->
-            <div class="result-section">
-                <div class="result-box">
-                    <p class="result-label">You get:</p>
-                    <div class="result-amount">
-                        <span id="convertedAmount">0.00</span>
-                        <span id="convertedCurrency">EUR</span>
+                <!-- Result Section -->
+                <div class="result-section">
+                    <div class="result-box">
+                        <p class="result-label">You get:</p>
+                        <div class="result-amount">
+                            <span id="convertedAmount">0.00</span>
+                            <span id="convertedCurrency">EUR</span>
+                        </div>
                     </div>
                 </div>
+
+                <!-- Exchange Rate Info -->
+                <div class="info-section">
+                    <p class="exchange-rate">
+                        1 <span id="fromCurrencyCode">USD</span> = 
+                        <span id="exchangeRate">0.85</span> <span id="toCurrencyCode">EUR</span>
+                    </p>
+                    <p class="last-update" id="lastUpdate">Last updated: Just now</p>
+                </div>
+
+                <!-- Error Message -->
+                <div id="errorMessage" class="error-message"></div>
             </div>
 
-            <!-- Exchange Rate Info -->
-            <div class="info-section">
-                <p class="exchange-rate">
-                    1 <span id="fromCurrencyCode">USD</span> = 
-                    <span id="exchangeRate">0.85</span> <span id="toCurrencyCode">EUR</span>
-                </p>
-                <p class="last-update" id="lastUpdate">Last updated: Just now</p>
-            </div>
+            <!-- Right Section: Currency Index -->
+            <div class="index-section">
+                <div class="index-header">
+                    <h2>📊 Live Index</h2>
+                    <p class="index-subtitle">Rates vs <span id="baseCurrencyDisplay">USD</span></p>
+                </div>
+                
+                <div class="currency-index-controls">
+                    <label for="baseCurrencySelect">Base:</label>
+                    <select id="baseCurrencySelect">
+                        <option value="USD">USD</option>
+                        <option value="EUR">EUR</option>
+                        <option value="GBP">GBP</option>
+                        <option value="JPY">JPY</option>
+                        <option value="AUD">AUD</option>
+                        <option value="CAD">CAD</option>
+                        <option value="CHF">CHF</option>
+                        <option value="CNY">CNY</option>
+                        <option value="INR">INR</option>
+                        <option value="MXN">MXN</option>
+                    </select>
+                </div>
 
-            <!-- Error Message -->
-            <div id="errorMessage" class="error-message"></div>
+                <div id="currencyIndexContainer" class="currency-index-grid">
+                    <!-- Currency rates will be populated here -->
+                </div>
+
+                <div id="indexError" class="error-message"></div>
+            </div>
 
             <!-- Loading Indicator -->
             <div id="loadingIndicator" class="loading-indicator">
                 <div class="spinner"></div>
                 <p>Fetching exchange rates...</p>
             </div>
-        </div>
-
-        <!-- Live Currency Index Section -->
-        <div class="index-box">
-            <div class="index-header">
-                <h2>📊 Live Currency Index</h2>
-                <p class="index-subtitle">Exchange rates relative to <span id="baseCurrencyDisplay">USD</span></p>
-            </div>
-            
-            <div class="currency-index-controls">
-                <label for="baseCurrencySelect">Base Currency:</label>
-                <select id="baseCurrencySelect">
-                    <option value="USD">USD - US Dollar</option>
-                    <option value="EUR">EUR - Euro</option>
-                    <option value="GBP">GBP - British Pound</option>
-                    <option value="JPY">JPY - Japanese Yen</option>
-                    <option value="AUD">AUD - Australian Dollar</option>
-                    <option value="CAD">CAD - Canadian Dollar</option>
-                    <option value="CHF">CHF - Swiss Franc</option>
-                    <option value="CNY">CNY - Chinese Yuan</option>
-                    <option value="INR">INR - Indian Rupee</option>
-                    <option value="MXN">MXN - Mexican Peso</option>
-                </select>
-            </div>
-
-            <div id="currencyIndexContainer" class="currency-index-grid">
-                <!-- Currency rates will be populated here -->
-            </div>
-
-            <div id="indexError" class="error-message"></div>
         </div>
 
         <!-- Footer -->
