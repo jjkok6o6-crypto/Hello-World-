@@ -95,6 +95,36 @@
             </div>
         </div>
 
+        <!-- Live Currency Index Section -->
+        <div class="index-box">
+            <div class="index-header">
+                <h2>📊 Live Currency Index</h2>
+                <p class="index-subtitle">Exchange rates relative to <span id="baseCurrencyDisplay">USD</span></p>
+            </div>
+            
+            <div class="currency-index-controls">
+                <label for="baseCurrencySelect">Base Currency:</label>
+                <select id="baseCurrencySelect">
+                    <option value="USD">USD - US Dollar</option>
+                    <option value="EUR">EUR - Euro</option>
+                    <option value="GBP">GBP - British Pound</option>
+                    <option value="JPY">JPY - Japanese Yen</option>
+                    <option value="AUD">AUD - Australian Dollar</option>
+                    <option value="CAD">CAD - Canadian Dollar</option>
+                    <option value="CHF">CHF - Swiss Franc</option>
+                    <option value="CNY">CNY - Chinese Yuan</option>
+                    <option value="INR">INR - Indian Rupee</option>
+                    <option value="MXN">MXN - Mexican Peso</option>
+                </select>
+            </div>
+
+            <div id="currencyIndexContainer" class="currency-index-grid">
+                <!-- Currency rates will be populated here -->
+            </div>
+
+            <div id="indexError" class="error-message"></div>
+        </div>
+
         <!-- Footer -->
         <footer>
             <p>Made with ❤️ | Exchange rates update every 60 seconds</p>
