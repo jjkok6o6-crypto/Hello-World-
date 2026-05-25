@@ -18,8 +18,29 @@ const lastUpdate = document.getElementById('lastUpdate');
 const errorMessage = document.getElementById('errorMessage');
 const loadingIndicator = document.getElementById('loadingIndicator');
 
+// Currency Index Elements
+const baseCurrencySelect = document.getElementById('baseCurrencySelect');
+const baseCurrencyDisplay = document.getElementById('baseCurrencyDisplay');
+const currencyIndexContainer = document.getElementById('currencyIndexContainer');
+const indexError = document.getElementById('indexError');
+
+// Currency data
+const currencyNames = {
+    USD: 'US Dollar',
+    EUR: 'Euro',
+    GBP: 'British Pound',
+    JPY: 'Japanese Yen',
+    AUD: 'Australian Dollar',
+    CAD: 'Canadian Dollar',
+    CHF: 'Swiss Franc',
+    CNY: 'Chinese Yuan',
+    INR: 'Indian Rupee',
+    MXN: 'Mexican Peso'
+};
+
 // State
 let exchangeRates = {};
+let previousRates = {};
 let lastUpdateTime = null;
 
 /**
@@ -31,6 +52,7 @@ function init() {
     fromCurrencySelect.addEventListener('change', handleCurrencyChange);
     toCurrencySelect.addEventListener('change', handleCurrencyChange);
     swapBtn.addEventListener('click', swapCurrencies);
+    baseCurrencySelect.addEventListener('change', handleBaseCurrencyChange);
 
     // Initial fetch
     fetchExchangeRates();
@@ -44,23 +66,26 @@ function init() {
  */
 async function fetchExchangeRates() {
     const fromCurrency = fromCurrencySelect.value;
+    const baseCurrency = baseCurrencySelect.value;
 
     try {
         showLoading(true);
         hideError();
 
+        // Fetch rates for converter
         const response = await fetch(`${CONFIG.API_ENDPOINT}/${fromCurrency}`);
-
         if (!response.ok) {
             throw new Error(`API Error: ${response.status}`);
         }
 
+        previousRates = { ...exchangeRates };
         const data = await response.json();
         exchangeRates = data.rates;
         lastUpdateTime = new Date();
 
         showLoading(false);
         handleConversion();
+        updateCurrencyIndex();
         updateLastUpdateTime();
     } catch (error) {
         showLoading(false);
@@ -109,6 +134,74 @@ function handleCurrencyChange() {
 }
 
 /**
+ * Handle base currency change for index
+ */
+function handleBaseCurrencyChange() {
+    baseCurrencyDisplay.textContent = baseCurrencySelect.value;
+    updateCurrencyIndex();
+}
+
+/**
+ * Update the currency index display
+ */
+function updateCurrencyIndex() {
+    const baseCurrency = baseCurrencySelect.value;
+    
+    try {
+        hideIndexError();
+        currencyIndexContainer.innerHTML = '';
+
+        // Get all supported currencies
+        const supportedCurrencies = Object.keys(currencyNames);
+
+        // Fetch rates for base currency
+        fetch(`${CONFIG.API_ENDPOINT}/${baseCurrency}`)
+            .then(response => {
+                if (!response.ok) throw new Error(`API Error: ${response.status}`);
+                return response.json();
+            })
+            .then(data => {
+                const rates = data.rates;
+
+                // Display rates for all supported currencies
+                supportedCurrencies.forEach(currency => {
+                    if (rates[currency]) {
+                        const rate = rates[currency];
+                        const previousRate = previousRates[currency] || rate;
+                        
+                        // Determine if rate went up or down
+                        const rateChange = ((rate - previousRate) / previousRate * 100).toFixed(2);
+                        const isUp = rate >= previousRate;
+                        
+                        // Create card
+                        const card = document.createElement('div');
+                        card.className = 'currency-rate-card';
+                        
+                        const changeText = isUp ? `↑ ${rateChange}%` : `↓ ${rateChange}%`;
+                        const changeClass = isUp ? 'up' : 'down';
+                        
+                        card.innerHTML = `
+                            <div class="currency-code">${currency}</div>
+                            <div class="currency-rate-value">${rate.toFixed(4)}</div>
+                            <div class="currency-name">${currencyNames[currency]}</div>
+                            <div class="rate-change ${changeClass}">${changeText}</div>
+                        `;
+                        
+                        currencyIndexContainer.appendChild(card);
+                    }
+                });
+            })
+            .catch(error => {
+                showIndexError(`Failed to fetch index rates: ${error.message}`);
+                console.error('Index API Error:', error);
+            });
+    } catch (error) {
+        showIndexError(`Error updating currency index: ${error.message}`);
+        console.error('Index Error:', error);
+    }
+}
+
+/**
  * Swap currencies
  */
 function swapCurrencies() {
@@ -144,6 +237,22 @@ function showError(message) {
 function hideError() {
     errorMessage.classList.remove('show');
     errorMessage.textContent = '';
+}
+
+/**
+ * Show index error message
+ */
+function showIndexError(message) {
+    indexError.textContent = message;
+    indexError.classList.add('show');
+}
+
+/**
+ * Hide index error message
+ */
+function hideIndexError() {
+    indexError.classList.remove('show');
+    indexError.textContent = '';
 }
 
 /**
